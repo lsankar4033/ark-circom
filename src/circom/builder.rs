@@ -13,6 +13,7 @@ use color_eyre::Result;
 pub struct CircomBuilder<E: PairingEngine> {
     pub cfg: CircomConfig<E>,
     pub inputs: HashMap<String, Vec<BigInt>>,
+    pub witness: Vec<BigInt>,
 }
 
 // Add utils for creating this from files / directly from bytes
@@ -25,7 +26,7 @@ pub struct CircomConfig<E: PairingEngine> {
 
 impl<E: PairingEngine> CircomConfig<E> {
     pub fn new(wtns: impl AsRef<Path>, r1cs: impl AsRef<Path>) -> Result<Self> {
-        let wtns = WitnessCalculator::new(wtns).unwrap();
+        let wtns = WitnessCalculator::new(wtns);
         let reader = File::open(r1cs)?;
         let r1cs = R1CSFile::new(reader)?.into();
         Ok(Self {
@@ -43,13 +44,19 @@ impl<E: PairingEngine> CircomBuilder<E> {
         Self {
             cfg,
             inputs: HashMap::new(),
+            witness: Vec::new(),
         }
     }
 
+    // NOTE: no longer used, but keeping in for now
     /// Pushes a Circom input at the specified name.
     pub fn push_input<T: Into<BigInt>>(&mut self, name: impl ToString, val: T) {
         let values = self.inputs.entry(name.to_string()).or_insert_with(Vec::new);
         values.push(val.into());
+    }
+
+    pub fn set_witness(&mut self, witness: Vec<BigInt>) {
+        self.witness = witness;
     }
 
     /// Generates an empty circom circuit with no witness set, to be used for
@@ -75,7 +82,7 @@ impl<E: PairingEngine> CircomBuilder<E> {
         let witness = self
             .cfg
             .wtns
-            .calculate_witness_element::<E, _>(self.inputs, self.cfg.sanity_check)?;
+            .calculate_witness_element::<E>(self.witness, self.cfg.sanity_check)?;
         circom.witness = Some(witness);
 
         // sanity check

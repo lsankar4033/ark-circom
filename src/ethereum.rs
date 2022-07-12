@@ -1,7 +1,8 @@
 //! Helpers for converting Arkworks types to U256-tuples as expected by the
 //! Solidity Groth16 Verifier smart contracts
 use ark_ff::{BigInteger, FromBytes, PrimeField};
-use ethers_core::types::U256;
+use ethereum_types::U256;
+// use ethers_core::types::U256;
 use num_traits::Zero;
 
 use ark_bn254::{Bn254, Fq, Fq2, Fr, G1Affine, G2Affine};

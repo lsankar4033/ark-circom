@@ -9,5 +9,7 @@ pub use circom::{CircomBuilder, CircomCircuit, CircomConfig, CircomReduction};
 
 pub mod ethereum;
 
+pub mod groth16prove;
+
 mod zkey;
 pub use zkey::read_zkey;

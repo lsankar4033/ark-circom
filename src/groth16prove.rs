@@ -1,5 +1,5 @@
-use ark_circom::{CircomBuilder, CircomConfig};
 use ark_std::rand::thread_rng;
+use circom::{CircomBuilder, CircomConfig};
 
 use ark_bn254::Bn254;
 use ark_groth16::{
@@ -11,7 +11,7 @@ use wasm_bindgen::prelude::*;
 // TODO: inputs are filenames for wasm/r1cs, witness bigints
 // TODO: JsValue is a wrapper around a rust value, so we can use it to pass in the witness
 #[wasm_bindgen]
-pub fn prove(wasm_file: String, r1cs_file: String) {
+pub fn groth16_prove(wasm_file: String, r1cs_file: String) {
     let cfg = CircomConfig::<Bn254>::new(wasm_file, r1cs_file)?;
     let mut builder = CircomBuilder::new(cfg);
 

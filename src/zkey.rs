@@ -868,7 +868,7 @@ mod tests {
         let mut file = File::open(path).unwrap();
         let (params, matrices) = read_zkey(&mut file).unwrap();
 
-        let mut wtns = WitnessCalculator::new("./test-vectors/mycircuit.wasm").unwrap();
+        let mut wtns = WitnessCalculator::new("./test-vectors/mycircuit.wasm");
         let mut inputs: HashMap<String, Vec<num_bigint::BigInt>> = HashMap::new();
         let values = inputs.entry("a".to_string()).or_insert_with(Vec::new);
         values.push(3.into());
